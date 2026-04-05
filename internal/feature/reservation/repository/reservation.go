@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	reservationmodel "github.com/belliorgabxl/reserve-ticket-backend/internal/feature/reservation.go/model"
+	reservationmodel "github.com/belliorgabxl/reserve-ticket-backend/internal/feature/reservation/model"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 )

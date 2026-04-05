@@ -5,8 +5,8 @@ import (
 	"errors"
 	"strconv"
 
-	reservationmodel "github.com/belliorgabxl/reserve-ticket-backend/internal/feature/reservation.go/model"
-	reservationsvc "github.com/belliorgabxl/reserve-ticket-backend/internal/feature/reservation.go/service"
+	reservationmodel "github.com/belliorgabxl/reserve-ticket-backend/internal/feature/reservation/model"
+	reservationsvc "github.com/belliorgabxl/reserve-ticket-backend/internal/feature/reservation/service"
 	"github.com/belliorgabxl/reserve-ticket-backend/pkg/response"
 	"github.com/gofiber/fiber/v3"
 )

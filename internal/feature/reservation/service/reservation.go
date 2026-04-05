@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	reservationmodel "github.com/belliorgabxl/reserve-ticket-backend/internal/feature/reservation.go/model"
+	reservationmodel "github.com/belliorgabxl/reserve-ticket-backend/internal/feature/reservation/model"
 	//  "github.com/belliorgabxl/reserve-ticket-backend/internal/feature/reservation.go/repository"
 	"github.com/redis/go-redis/v9"
 )

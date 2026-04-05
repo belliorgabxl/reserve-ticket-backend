@@ -2,7 +2,7 @@ package reservationhandler
 
 import (
 	"github.com/belliorgabxl/reserve-ticket-backend/internal/config"
-	reservationsvc "github.com/belliorgabxl/reserve-ticket-backend/internal/feature/reservation.go/service"
+	reservationsvc "github.com/belliorgabxl/reserve-ticket-backend/internal/feature/reservation/service"
 	mq "github.com/belliorgabxl/reserve-ticket-backend/pkg/rabbitmq"
 	"github.com/gofiber/fiber/v3"
 	"github.com/jackc/pgx/v5/pgxpool"

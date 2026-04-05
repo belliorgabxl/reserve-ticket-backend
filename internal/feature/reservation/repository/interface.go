@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	reservationmodel "github.com/belliorgabxl/reserve-ticket-backend/internal/feature/reservation.go/model"
+	reservationmodel "github.com/belliorgabxl/reserve-ticket-backend/internal/feature/reservation/model"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -17,7 +17,6 @@ type IReservationRepository interface {
 	MarkReservationExpired(ctx context.Context, reservationID string) error
 }
 
-
 type ReservationRepository struct {
 	db *pgxpool.Pool
 }
@@ -25,4 +24,3 @@ type ReservationRepository struct {
 func NewReservationRepository(db *pgxpool.Pool) *ReservationRepository {
 	return &ReservationRepository{db: db}
 }
-
