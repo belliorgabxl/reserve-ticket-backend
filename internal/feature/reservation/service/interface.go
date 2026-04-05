@@ -2,10 +2,8 @@ package reservationsvc
 
 import (
 	"context"
-
 	reservationmodel "github.com/belliorgabxl/reserve-ticket-backend/internal/feature/reservation/model"
 	reservationrepository "github.com/belliorgabxl/reserve-ticket-backend/internal/feature/reservation/repository"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -22,12 +20,12 @@ type ReservationService struct {
 }
 
 func NewReservationService(
-	pg *pgxpool.Pool,
+	reservationRepo *reservationrepository.ReservationRepository,
 	redis *redis.Client,
 	holdTTLMinutes int,
 ) *ReservationService {
 	return &ReservationService{
-		reservationRepo: reservationrepository.NewReservationRepository(pg),
+		reservationRepo: reservationRepo,
 		redis:           redis,
 		holdTTLMinutes:  holdTTLMinutes,
 	}

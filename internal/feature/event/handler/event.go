@@ -3,6 +3,7 @@ package eventhandler
 import (
 	"context"
 
+	"github.com/belliorgabxl/reserve-ticket-backend/pkg/response"
 	"github.com/gofiber/fiber/v3"
 )
 
@@ -14,29 +15,10 @@ type EventResponse struct {
 }
 
 func (h *EventHandler) ListEvents(c fiber.Ctx) error {
-	rows, err := h.pg.Query(context.Background(), `
-		SELECT id::text, name, venue_name, event_date::text
-		FROM events
-		ORDER BY event_date ASC
-		LIMIT 20
-	`)
+	res, err := h.eventService.ListEvents(context.Background())
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": err.Error(),
-		})
-	}
-	defer rows.Close()
-
-	out := make([]EventResponse, 0)
-	for rows.Next() {
-		var item EventResponse
-		if err := rows.Scan(&item.ID, &item.Name, &item.VenueName, &item.EventDate); err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"message": err.Error(),
-			})
-		}
-		out = append(out, item)
+		return response.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(out)
+	return response.Success(c, res)
 }

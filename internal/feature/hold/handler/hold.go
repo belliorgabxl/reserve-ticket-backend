@@ -1,52 +1,47 @@
 package holdhandler
 
 import (
-	holdmodel "github.com/belliorgabxl/reserve-ticket-backend/internal/feature/hold/model"
-	"github.com/gofiber/fiber/v3"
 	"context"
-	"time"
-	"fmt"
+	"errors"
+
+	holdmodel "github.com/belliorgabxl/reserve-ticket-backend/internal/feature/hold/model"
+	holdsvc "github.com/belliorgabxl/reserve-ticket-backend/internal/feature/hold/service"
+	"github.com/belliorgabxl/reserve-ticket-backend/pkg/response"
+	"github.com/gofiber/fiber/v3"
 )
+
 func (h *HoldHandler) HoldSeats(c fiber.Ctx) error {
 	var req holdmodel.HoldSeatsRequest
 	if err := c.Bind().Body(&req); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "invalid request body",
-		})
+		return response.Error(c, fiber.StatusBadRequest, "invalid request body")
 	}
 
-	if req.ShowTimeID == "" || len(req.SeatIDs) == 0 || req.UserID == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "showTimeId, seatIds, userId are required",
-		})
+	res, err := h.holdService.HoldSeats(context.Background(), req)
+	if err != nil {
+		return response.Error(c, fiber.StatusInternalServerError, err.Error())
+
 	}
 
-	ctx := context.Background()
-	ttl := 10 * time.Minute
+	return response.Success(c, res)
+}
 
-	held := make([]string, 0, len(req.SeatIDs))
-	failed := make([]string, 0)
+func (h *HoldHandler) ReleaseSeats(c fiber.Ctx) error {
+	var req holdmodel.ReleaseSeatsRequest
+	if err := c.Bind().Body(&req); err != nil {
+		return response.Error(c, fiber.StatusBadRequest, "invalid request body")
+	}
 
-	for _, seatID := range req.SeatIDs {
-		key := fmt.Sprintf("seat:hold:%s:%s", req.ShowTimeID, seatID)
-
-		ok, err := h.rdb.SetNX(ctx, key, req.UserID, ttl).Result()
-		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"message": err.Error(),
-			})
-		}
-
-		if ok {
-			held = append(held, seatID)
-		} else {
-			failed = append(failed, seatID)
+	err := h.holdService.ReleaseSeats(context.Background(), req)
+	if err != nil {
+		switch {
+		case errors.Is(err, holdsvc.ErrInvalidRequest):
+			return response.Error(c, fiber.StatusBadRequest, err.Error())
+		default:
+			return response.Error(c, fiber.StatusInternalServerError, err.Error())
 		}
 	}
 
-	return c.JSON(fiber.Map{
-		"heldSeatIds":   held,
-		"failedSeatIds": failed,
-		"expiresInSec":  int(ttl.Seconds()),
+	return response.Success(c, fiber.Map{
+		"released": true,
 	})
 }

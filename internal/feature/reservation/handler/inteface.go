@@ -1,12 +1,8 @@
 package reservationhandler
 
 import (
-	"github.com/belliorgabxl/reserve-ticket-backend/internal/config"
 	reservationsvc "github.com/belliorgabxl/reserve-ticket-backend/internal/feature/reservation/service"
-	mq "github.com/belliorgabxl/reserve-ticket-backend/pkg/rabbitmq"
 	"github.com/gofiber/fiber/v3"
-	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/redis/go-redis/v9"
 )
 
 type IReservationHandler interface {
@@ -20,12 +16,9 @@ type ReservationHandler struct {
 }
 
 func NewReservationHandler(
-	pg *pgxpool.Pool,
-	rdb *redis.Client,
-	rmq *mq.RabbitMQ,
-	cfg config.Config,
+	reservationService *reservationsvc.ReservationService,
 ) *ReservationHandler {
 	return &ReservationHandler{
-		reservationService: reservationsvc.NewReservationService(pg, rdb, 10),
+		reservationService: reservationService,
 	}
 }

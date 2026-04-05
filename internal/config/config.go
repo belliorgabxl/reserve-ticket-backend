@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 	"os"
+	"strconv"
 	// "github.com/google/s2a-go/fallback"
 )
 
@@ -21,6 +22,8 @@ type Config struct {
 
 	RabbitMQURL      string
 	CORSAllowOrigins string
+
+	HoldTTLMinutes int
 }
 
 func MustLoad() Config {
@@ -38,6 +41,7 @@ func MustLoad() Config {
 		RedisDB:          getEnv("REDIS_DB", "0"),
 		RabbitMQURL:      getEnv("RABBITMQ_URL", "amqp://guest:guest@localhost:5672/"),
 		CORSAllowOrigins: getEnv("CORS_ALLOW_ORIGINS", "http://localhost:3000"),
+		HoldTTLMinutes:   getEnvAsInt("TTL_MINUTE", 5),
 	}
 
 	log.Println("config loaded")
@@ -52,4 +56,19 @@ func getEnv(key, fallback string) string {
 	}
 
 	return fallback
+}
+
+func getEnvAsInt(key string, fallback int) int {
+	v := os.Getenv(key)
+	if v == "" {
+		return fallback
+	}
+
+	n, err := strconv.Atoi(v)
+	if err != nil {
+		log.Printf("invalid int env %s=%q, fallback=%d", key, v, fallback)
+		return fallback
+	}
+
+	return n
 }
