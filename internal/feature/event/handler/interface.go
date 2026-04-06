@@ -7,6 +7,8 @@ import (
 
 type IEventHandler interface {
 	ListEvents(c fiber.Ctx) error
+	ListShowTimesByEventID(c fiber.Ctx) error
+	GetEventByID(c fiber.Ctx) error
 }
 
 type EventHandler struct {

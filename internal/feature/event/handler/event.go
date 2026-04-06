@@ -22,3 +22,23 @@ func (h *EventHandler) ListEvents(c fiber.Ctx) error {
 
 	return response.Success(c, res)
 }
+func (h *EventHandler) ListShowTimesByEventID(c fiber.Ctx) error {
+	eventId := c.Params("eventId")
+
+	res, err := h.eventService.ListShowTimesByEventID(context.Background(), eventId)
+	if err != nil {
+		return response.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
+
+	return response.Success(c, res)
+}
+func (h *EventHandler) GetEventByID(c fiber.Ctx) error {
+	eventId := c.Params("eventId")
+
+	res, err := h.eventService.GetEventByID(context.Background(), eventId)
+	if err != nil {
+		return response.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
+
+	return response.Success(c, res)
+}

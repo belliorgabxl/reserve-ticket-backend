@@ -8,6 +8,7 @@ import (
 
 type IEventService interface {
 	ListEvents(ctx context.Context) ([]eventmodel.EventResponse, error)
+	ListShowTimesByEventID(ctx context.Context, eventId string) ([]eventmodel.ShowTimeResponse, error)
 }
 
 type EventService struct {

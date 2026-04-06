@@ -9,6 +9,8 @@ import (
 
 type IEventRepository interface {
 	ListEvents(ctx context.Context) ([]eventmodel.EventResponse, error)
+	ListShowTimesByEventID(ctx context.Context, eventID string) ([]eventmodel.ShowTimeResponse, error)
+	GetEventByID(ctx context.Context, eventID string) (*eventmodel.EventResponse, error)
 }
 
 type EventRepository struct {

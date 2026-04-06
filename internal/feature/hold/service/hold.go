@@ -50,6 +50,7 @@ func (s *HoldService) HoldSeats(
 		HeldSeatIDs:   held,
 		FailedSeatIDs: failed,
 		ExpiresInSec:  int(ttl.Seconds()),
+		IsPartial:     len(failed) > 0,
 	}, nil
 }
 
